@@ -1,4 +1,4 @@
-# 🩺 Doctor Schedule
+# 🩺 Plataforma de Agendamento e Gestão para Clínicas
 
 ![Banner do Projeto](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs)
