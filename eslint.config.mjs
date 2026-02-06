@@ -1,7 +1,6 @@
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 const eslintConfig = defineConfig([
@@ -18,32 +17,10 @@ const eslintConfig = defineConfig([
   ]),
   {
     plugins: {
-      "simple-import-sort": simpleImportSort,
+      // "simple-import-sort": simpleImportSort,
     },
     rules: {
-      "simple-import-sort/imports": [
-        "error",
-        {
-          groups: [
-            // 1️⃣ Side-effect imports → SEMPRE no topo (CSS, polyfills, etc)
-            ["^\\u0000"],
-
-            // 2️⃣ Next.js / React
-            ["^next", "^react"],
-
-            // 3️⃣ Packages
-            ["^@?\\w"],
-
-            // 4️⃣ Absolute imports (ex: @/)
-            ["^@/"],
-
-            // 5️⃣ Relative imports
-            ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-            ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
-          ],
-        },
-      ],
-
+      "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
     },
   },
