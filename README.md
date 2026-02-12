@@ -71,6 +71,7 @@ Criar uma plataforma SaaS moderna que centralize:
 - **TypeScript**
 - **Tailwind CSS**
 - **shadcn/ui**
+- **zod**
 - **ESLint**
 - **Prettier**
 
@@ -89,6 +90,7 @@ Criar uma plataforma SaaS moderna que centralize:
 - Banco de dados **serverless** com Neon
 - Autenticação integrada com **Neon Auth**
 - UI consistente e acessível com **shadcn/ui**
+- Validação de dados e formulários com **Zod**
 - Código padronizado com **ESLint + Prettier**
 - Preparado para escalar com backend real e billing
 

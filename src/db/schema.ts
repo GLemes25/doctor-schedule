@@ -8,7 +8,7 @@ export const genderEnum = pgEnum("gender", ["male", "female"]);
 export const usersTable = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
 
-});
+})]]]]]]
 
 export const UserTableRelations = relations(usersTable, ({many}) => ({
   clinics: many(clinicsTable),
