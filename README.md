@@ -80,6 +80,7 @@ Criar uma plataforma SaaS moderna que centralize:
 - **Neon (PostgreSQL Serverless)**
 - **Neon Auth**
 - **Drizzle ORM**
+- **Better Auth**
 
 ---
 
@@ -88,7 +89,7 @@ Criar uma plataforma SaaS moderna que centralize:
 - Arquitetura pensada para **SaaS multi-clínica**
 - ORM moderno e tipado com **Drizzle**
 - Banco de dados **serverless** com Neon
-- Autenticação integrada com **Neon Auth**
+- Autenticação moderna e type-safe com **Better Auth**
 - UI consistente e acessível com **shadcn/ui**
 - Validação de dados e formulários com **Zod**
 - Código padronizado com **ESLint + Prettier**
@@ -130,3 +131,5 @@ npm run dev
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/gabriel-lemes-G25)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:gabriellemes924@gmail.com)
 [![Whatsapp](https://img.shields.io/badge/Whatsapp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5567991179190)
+
+https://www.better-auth.com/

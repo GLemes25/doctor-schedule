@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -7,8 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-const registerSchema = z.object({
-  username: z.string().trim().min(1, { message: "Nome é Obrigatório" }).max(50),
+const loginSchema = z.object({
   email: z.email(),
   password: z
     .string()
@@ -17,48 +17,28 @@ const registerSchema = z.object({
     .min(8, { message: "Senha deve ter no mínimo 8 caracteres" }),
 });
 
-export const SingUpForm = () => {
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+export const LoginForm = () => {
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof registerSchema>) => {
+  const onSubmit = (values: z.infer<typeof loginSchema>) => {
     console.log(values);
   };
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Criar Conta</CardTitle>
-        <CardDescription>Crie uma conta para continuar</CardDescription>
+        <CardTitle>Login</CardTitle>
+        <CardDescription>Faça login para continuar</CardDescription>
       </CardHeader>
 
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            <Controller
-              name="username"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Nome</FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Digite seu nome..."
-                    autoComplete="off"
-                    type="text"
-                  />
-
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
             <Controller
               name="email"
               control={form.control}
@@ -78,6 +58,7 @@ export const SingUpForm = () => {
                 </Field>
               )}
             />
+
             <Controller
               name="password"
               control={form.control}
@@ -99,7 +80,7 @@ export const SingUpForm = () => {
             />
             <Field orientation="horizontal">
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                Criar Conta
+                Entrar
               </Button>
             </Field>
           </FieldGroup>
