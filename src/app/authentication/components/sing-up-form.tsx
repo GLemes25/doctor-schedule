@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -18,6 +21,7 @@ const registerSchema = z.object({
 });
 
 export const SingUpForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -28,7 +32,18 @@ export const SingUpForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
+    authClient.signUp.email(
+      {
+        email: values.email,
+        password: values.password,
+        name: values.username,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+      },
+    );
   };
   return (
     <Card>
@@ -99,7 +114,11 @@ export const SingUpForm = () => {
             />
             <Field orientation="horizontal">
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                Criar Conta
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Criar Conta"
+                )}
               </Button>
             </Field>
           </FieldGroup>
