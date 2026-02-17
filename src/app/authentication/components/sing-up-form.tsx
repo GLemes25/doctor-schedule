@@ -49,7 +49,9 @@ export const SingUpForm = () => {
             toast.error("E-mail já cadastrado.");
             return;
           }
-          toast.error("Erro ao criar conta.");
+          if (ctx.error) {
+            toast.error("Erro ao criar conta.");
+          }
         },
       },
     );
