@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,7 +32,7 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
     await authClient.signIn.email(
       { email: values.email, password: values.password },
       {
@@ -44,6 +45,15 @@ export const LoginForm = () => {
       },
     );
   };
+
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+      scopes: ["email", "profile", "openid"],
+    });
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -52,7 +62,7 @@ export const LoginForm = () => {
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FieldGroup>
             <Controller
               name="email"
@@ -94,13 +104,24 @@ export const LoginForm = () => {
               )}
             />
             <Field orientation="horizontal">
-              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? (
-                  <Loader2 className="mr-2 h-2 w-4 animate-spin" />
-                ) : (
-                  "Entrar"
-                )}
-              </Button>
+              <div className="flex w-full flex-col gap-2">
+                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? (
+                    <Loader2 className="mr-2 h-2 w-4 animate-spin" />
+                  ) : (
+                    "Entrar"
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  type="button"
+                  className="w-full"
+                  onClick={handleGoogleLogin}
+                >
+                  <Image src="/images/google.svg" alt="Google" width={20} height={20} />
+                  Entrar com Google
+                </Button>
+              </div>
             </Field>
           </FieldGroup>
         </form>

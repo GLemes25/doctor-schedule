@@ -25,6 +25,7 @@ const DashboardPage = async () => {
       <h1>{session?.user?.name}</h1>
       <h1>{session?.user?.email}</h1>
       <SingOutButton></SingOutButton>
+      {/* <Image src={session?.user?.image as string} alt="user" width={100} height={100} /> */}
     </div>
   );
 };
