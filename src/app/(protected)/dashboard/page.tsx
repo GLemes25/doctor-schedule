@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { SingOutButton } from "./components/sing-ou-button";
+import { SingOutButton } from "./_components/sing-ou-button";
 
 const DashboardPage = async () => {
   const session = await auth.api.getSession({
