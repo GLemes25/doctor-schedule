@@ -5,6 +5,7 @@ import {
   userToClinicsTable,
   verificationsTable,
 } from "@/db/schema";
+import { headers } from "next/headers";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -12,6 +13,7 @@ import { customSession } from "better-auth/plugins";
 
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 const authSchema = {
   usersTable,
@@ -77,3 +79,19 @@ export const auth = betterAuth({
     enabled: true,
   },
 });
+
+export const requiereAuthAndClinic = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    redirect("/authentication");
+  }
+  const clinics = session.user.clinic;
+
+  if (!clinics) {
+    redirect("/clinic-form");
+  }
+  return session;
+};

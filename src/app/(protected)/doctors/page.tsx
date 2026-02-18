@@ -8,9 +8,11 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
+import { requiereAuthAndClinic } from "@/lib/auth";
 import { Plus } from "lucide-react";
 
-const doctorsPage = () => {
+const doctorsPage = async () => {
+  const session = await requiereAuthAndClinic();
   return (
     <PageContainer>
       <PageHeader>
