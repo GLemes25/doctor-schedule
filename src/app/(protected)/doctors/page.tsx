@@ -20,7 +20,7 @@ const doctorsPage = async () => {
           <PageDescription>Gerencie os Médicos da sua Clínica</PageDescription>
         </PageHeaderContent>
         <PageActions>
-          <AddDoctorButton />
+          <AddDoctorButton session={session} />
         </PageActions>
       </PageHeader>
       <PageContent>

@@ -1,3 +1,4 @@
+import { UpsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -16,51 +17,79 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TimeInput } from "@/components/ui/time-input";
+import { SessionType } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import z from "zod";
-import { medicalSpecialties, weekDays } from "../_constants";
+import { genders, getWeekDayKey, medicalSpecialties, weekDays } from "../_constants";
 
 const formschema = z
   .object({
     name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
     specialty: z.string().trim().min(1, { message: "Especialidade é obrigatória" }),
-    appointmentsPrice: z.number().min(1, { message: "Preço da consulta é obrigatório" }),
-    availableFromWeekDay: z.string().trim().min(1, { message: "Dia da semana é obrigatório" }),
-    availableToWeekDay: z.string().trim().min(1, { message: "Dia da semana é obrigatório" }),
-    availableFromTime: z.string(),
-    availableToTime: z.string(),
+    appointmentPrice: z.number().min(1, { message: "Preço da consulta é obrigatório" }),
+    availabilityFromWeekDay: z.string().trim().min(1, { message: "Dia da semana é obrigatório" }),
+    availabilityToWeekDay: z.string().trim().min(1, { message: "Dia da semana é obrigatório" }),
+    availabilityFromTime: z.string(),
+    availabilityToTime: z.string(),
+    gender: z.enum(["male", "female"]),
   })
   .refine(
     (data) => {
-      const from = new Date(`1970-01-01T${data.availableFromTime}`);
-      const to = new Date(`1970-01-01T${data.availableToTime}`);
+      const from = new Date(`1970-01-01T${data.availabilityFromTime}`);
+      const to = new Date(`1970-01-01T${data.availabilityToTime}`);
       return from < to;
     },
     {
       message: "A hora final deve ser anterior a hora inicial",
-      path: ["availableToTime"],
+      path: ["availabilityToTime"],
     },
   );
 
-export const UpsertDoctorForm = () => {
+interface UpsertDoctorFormProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+  session: SessionType;
+}
+export const UpsertDoctorForm = ({ session, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formschema>>({
     resolver: zodResolver(formschema),
     defaultValues: {
       name: "",
       specialty: "",
-      appointmentsPrice: 0,
-      availableFromWeekDay: weekDays[1].value,
-      availableToWeekDay: weekDays[5].value,
-      availableFromTime: "",
-      availableToTime: "",
+      appointmentPrice: 0,
+      availabilityFromWeekDay: weekDays[1].value,
+      availabilityToWeekDay: weekDays[5].value,
+      availabilityFromTime: "",
+      availabilityToTime: "",
+      gender: "male",
+    },
+  });
+
+  const upsertDoctorAction = useAction(UpsertDoctor, {
+    onSuccess: () => {
+      toast.success("Médico adicionado com sucesso");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao adicionar médico");
     },
   });
 
   const handleSubmit = (values: z.infer<typeof formschema>) => {
     console.log(values);
+    upsertDoctorAction.execute({
+      ...values,
+      availabilityFromWeekDay: getWeekDayKey(values.availabilityFromWeekDay),
+      availabilityToWeekDay: getWeekDayKey(values.availabilityToWeekDay),
+      appointmentPriceInCents: values.appointmentPrice * 100,
+      clinicId: session?.user.clinic?.id!,
+    });
   };
 
   return (
@@ -118,7 +147,7 @@ export const UpsertDoctorForm = () => {
               )}
             />
             <Controller
-              name="appointmentsPrice"
+              name="appointmentPrice"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -143,7 +172,32 @@ export const UpsertDoctorForm = () => {
               )}
             />
             <Controller
-              name="availableFromWeekDay"
+              name="gender"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Sexo</FieldLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione o sexo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {genders.map((gender) => (
+                          <SelectItem key={gender.key} value={gender.key}>
+                            {gender.value}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="availabilityFromWeekDay"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -168,7 +222,7 @@ export const UpsertDoctorForm = () => {
               )}
             />
             <Controller
-              name="availableToWeekDay"
+              name="availabilityToWeekDay"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -193,7 +247,7 @@ export const UpsertDoctorForm = () => {
               )}
             />
             <Controller
-              name="availableFromTime"
+              name="availabilityFromTime"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -204,7 +258,7 @@ export const UpsertDoctorForm = () => {
               )}
             />
             <Controller
-              name="availableToTime"
+              name="availabilityToTime"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -216,8 +270,8 @@ export const UpsertDoctorForm = () => {
             />
 
             <Field orientation="horizontal">
-              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? (
+              <Button type="submit" className="w-full" disabled={upsertDoctorAction.isPending}>
+                {upsertDoctorAction.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   "Criar Médico"

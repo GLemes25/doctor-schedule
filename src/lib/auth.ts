@@ -95,3 +95,5 @@ export const requiereAuthAndClinic = async () => {
   }
   return session;
 };
+
+export type SessionType = Awaited<ReturnType<typeof auth.api.getSession>>;
