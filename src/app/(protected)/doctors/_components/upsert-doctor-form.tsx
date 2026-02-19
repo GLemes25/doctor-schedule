@@ -42,7 +42,7 @@ const formschema = z
     (data) => {
       const from = new Date(`1970-01-01T${data.availabilityFromTime}`);
       const to = new Date(`1970-01-01T${data.availabilityToTime}`);
-      return from < to;
+      return from <= to;
     },
     {
       message: "A hora final deve ser anterior a hora inicial",
