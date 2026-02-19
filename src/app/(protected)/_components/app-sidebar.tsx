@@ -32,7 +32,7 @@ const items = [
   { title: "Pacientes", url: "/patiens ", icon: UserRound },
 ];
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   const router = useRouter();
   const session = authClient.useSession();
   const pathname = usePathname();
@@ -99,4 +99,4 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   );
-}
+};

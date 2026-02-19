@@ -115,7 +115,6 @@ npm run dev
 
 ### 🔮 Próximas Evoluções
 
-- Autenticação completa (paciente / clínica)
 - Controle de permissões (RBAC)
 - Sistema de planos e billing
 - Integração com gateway de pagamento
@@ -131,5 +130,3 @@ npm run dev
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/gabriel-lemes-G25)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:gabriellemes924@gmail.com)
 [![Whatsapp](https://img.shields.io/badge/Whatsapp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5567991179190)
-
-https://www.better-auth.com/
