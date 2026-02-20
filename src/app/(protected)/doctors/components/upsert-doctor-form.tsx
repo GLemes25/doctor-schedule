@@ -1,3 +1,4 @@
+"use client";
 import { UpsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +26,8 @@ import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
-import { genders, getWeekDayKey, medicalSpecialties, weekDays } from "../_constants";
+import { genders, medicalSpecialties } from "../constants";
+import { setWeekDayKey, weekDays } from "../helpers/availability";
 
 const formschema = z
   .object({
@@ -50,11 +52,11 @@ const formschema = z
     },
   );
 
-interface UpsertDoctorFormProps {
+type UpsertDoctorFormProps = {
   onSuccess?: () => void;
   onError?: () => void;
-  session: SessionType;
-}
+  session?: SessionType;
+};
 export const UpsertDoctorForm = ({ session, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formschema>>({
     resolver: zodResolver(formschema),
@@ -85,8 +87,8 @@ export const UpsertDoctorForm = ({ session, onSuccess }: UpsertDoctorFormProps) 
     console.log(values);
     upsertDoctorAction.execute({
       ...values,
-      availabilityFromWeekDay: getWeekDayKey(values.availabilityFromWeekDay),
-      availabilityToWeekDay: getWeekDayKey(values.availabilityToWeekDay),
+      availabilityFromWeekDay: setWeekDayKey(values.availabilityFromWeekDay),
+      availabilityToWeekDay: setWeekDayKey(values.availabilityToWeekDay),
       appointmentPriceInCents: values.appointmentPrice * 100,
       clinicId: session?.user.clinic?.id!,
     });
