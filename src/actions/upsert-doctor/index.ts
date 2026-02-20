@@ -53,6 +53,7 @@ export const UpsertDoctor = actionClient
         target: [doctorsTable.id],
         set: {
           ...parsedInput,
+          clinicId: session?.user.clinic?.id,
           availabilityFromTime: availabilityFromTimeUTC.format("HH:mm:ss"),
           availabilityToTime: availabilityToTimeUTC.format("HH:mm:ss"),
         },

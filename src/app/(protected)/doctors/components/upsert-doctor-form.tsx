@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TimeInput } from "@/components/ui/time-input";
+import { doctorsTable } from "@/db/schema";
 import { SessionType } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -54,27 +55,31 @@ const formschema = z
 
 type UpsertDoctorFormProps = {
   onSuccess?: () => void;
-  onError?: () => void;
+  doctor?: typeof doctorsTable.$inferSelect;
   session?: SessionType;
 };
-export const UpsertDoctorForm = ({ session, onSuccess }: UpsertDoctorFormProps) => {
+export const UpsertDoctorForm = ({ session, doctor, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formschema>>({
     resolver: zodResolver(formschema),
     defaultValues: {
-      name: "",
-      specialty: "",
-      appointmentPrice: 0,
-      availabilityFromWeekDay: weekDays[1].value,
-      availabilityToWeekDay: weekDays[5].value,
-      availabilityFromTime: "",
-      availabilityToTime: "",
-      gender: "male",
+      name: doctor?.name ?? "",
+      specialty: doctor?.specialty ?? "",
+      appointmentPrice: doctor?.appointmentPriceInCents ? doctor?.appointmentPriceInCents / 100 : 0,
+      availabilityFromWeekDay: doctor?.availabilityFromWeekDay
+        ? weekDays[doctor?.availabilityFromWeekDay].value
+        : weekDays[1].value,
+      availabilityToWeekDay: doctor?.availabilityToWeekDay
+        ? weekDays[doctor?.availabilityToWeekDay].value
+        : weekDays[5].value,
+      availabilityFromTime: doctor?.availabilityFromTime ?? "",
+      availabilityToTime: doctor?.availabilityToTime ?? "",
+      gender: doctor?.gender ?? "male",
     },
   });
 
   const upsertDoctorAction = useAction(UpsertDoctor, {
     onSuccess: () => {
-      toast.success("Médico adicionado com sucesso");
+      toast.success(doctor ? "Médico alterado com sucesso" : "Médico adicionado com sucesso");
       onSuccess?.();
     },
     onError: (error) => {
@@ -84,21 +89,25 @@ export const UpsertDoctorForm = ({ session, onSuccess }: UpsertDoctorFormProps) 
   });
 
   const handleSubmit = (values: z.infer<typeof formschema>) => {
+    const clinicId = session?.user.clinic?.id ?? doctor?.clinicId;
     console.log(values);
     upsertDoctorAction.execute({
       ...values,
+      id: doctor?.id,
       availabilityFromWeekDay: setWeekDayKey(values.availabilityFromWeekDay),
       availabilityToWeekDay: setWeekDayKey(values.availabilityToWeekDay),
       appointmentPriceInCents: values.appointmentPrice * 100,
-      clinicId: session?.user.clinic?.id!,
+      clinicId: clinicId!,
     });
   };
 
   return (
     <DialogContent className="flex max-h-[90vh] flex-col">
       <DialogHeader className="shrink-0">
-        <DialogTitle>Adicionar Médico</DialogTitle>
-        <DialogDescription>Adicione um novo médico</DialogDescription>
+        <DialogTitle>{doctor ? doctor.name : "Adicionar Médico"} </DialogTitle>
+        <DialogDescription>
+          {doctor ? "Edite as informações desse" : "Adicione um novo"} médico
+        </DialogDescription>
       </DialogHeader>
 
       <div className="flex-1 overflow-y-auto">
@@ -272,11 +281,13 @@ export const UpsertDoctorForm = ({ session, onSuccess }: UpsertDoctorFormProps) 
             />
 
             <Field orientation="horizontal">
-              <Button type="submit" className="w-full" disabled={upsertDoctorAction.isPending}>
+              <Button type="submit" className="" disabled={upsertDoctorAction.isPending}>
                 {upsertDoctorAction.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : doctor ? (
+                  "Salvar"
                 ) : (
-                  "Criar Médico"
+                  "Adicionar"
                 )}
               </Button>
             </Field>
