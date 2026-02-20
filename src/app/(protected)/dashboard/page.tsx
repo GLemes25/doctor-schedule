@@ -1,5 +1,5 @@
 import { requiereAuthAndClinic } from "@/lib/auth";
-import { SingOutButton } from "./_components/sing-ou-button";
+import { SingOutButton } from "./components/sing-ou-button";
 
 const DashboardPage = async () => {
   const session = await requiereAuthAndClinic();
