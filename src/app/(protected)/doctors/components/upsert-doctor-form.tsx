@@ -60,6 +60,7 @@ type UpsertDoctorFormProps = {
 };
 export const UpsertDoctorForm = ({ session, doctor, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formschema>>({
+    shouldUnregister: true,
     resolver: zodResolver(formschema),
     defaultValues: {
       name: doctor?.name ?? "",
