@@ -23,11 +23,13 @@ import { SessionType } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
-import { genders, medicalSpecialties } from "../constants";
+import { genders } from "../../../../helpers/gender";
+import { medicalSpecialties } from "../constants";
 import { setWeekDayKey, weekDays } from "../helpers/availability";
 
 const formschema = z
@@ -57,8 +59,9 @@ type UpsertDoctorFormProps = {
   onSuccess?: () => void;
   doctor?: typeof doctorsTable.$inferSelect;
   session?: SessionType;
+  isOpen: boolean;
 };
-export const UpsertDoctorForm = ({ session, doctor, onSuccess }: UpsertDoctorFormProps) => {
+export const UpsertDoctorForm = ({ isOpen, session, doctor, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formschema>>({
     shouldUnregister: true,
     resolver: zodResolver(formschema),
@@ -77,7 +80,26 @@ export const UpsertDoctorForm = ({ session, doctor, onSuccess }: UpsertDoctorFor
       gender: doctor?.gender ?? "male",
     },
   });
-
+  useEffect(() => {
+    if (!isOpen) {
+      form.reset({
+        name: doctor?.name ?? "",
+        specialty: doctor?.specialty ?? "",
+        appointmentPrice: doctor?.appointmentPriceInCents
+          ? doctor?.appointmentPriceInCents / 100
+          : 0,
+        availabilityFromWeekDay: doctor?.availabilityFromWeekDay
+          ? weekDays[doctor?.availabilityFromWeekDay].value
+          : weekDays[1].value,
+        availabilityToWeekDay: doctor?.availabilityToWeekDay
+          ? weekDays[doctor?.availabilityToWeekDay].value
+          : weekDays[5].value,
+        availabilityFromTime: doctor?.availabilityFromTime ?? "",
+        availabilityToTime: doctor?.availabilityToTime ?? "",
+        gender: doctor?.gender ?? "male",
+      });
+    }
+  }, [isOpen, form, doctor]);
   const upsertDoctorAction = useAction(UpsertDoctor, {
     onSuccess: () => {
       toast.success(doctor ? "Médico alterado com sucesso" : "Médico adicionado com sucesso");

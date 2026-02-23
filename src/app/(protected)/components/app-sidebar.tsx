@@ -29,7 +29,7 @@ const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Agendamentos", url: "/appointments", icon: CalendarDays },
   { title: "Médicos", url: "/doctors", icon: Stethoscope },
-  { title: "Pacientes", url: "/patiens ", icon: UserRound },
+  { title: "Pacientes", url: "/patients", icon: UserRound },
 ];
 
 export const AppSidebar = () => {

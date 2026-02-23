@@ -54,12 +54,3 @@ export const medicalSpecialties = Object.entries(MedicalSpecialty).map(([key, va
   value: MedicalSpecialty[key as keyof typeof MedicalSpecialty],
   label: value,
 }));
-
-enum genderEnum {
-  male = "masculino",
-  female = "feminino",
-}
-export const genders = Object.entries(genderEnum).map(([key, value]) => ({
-  key,
-  value,
-}));

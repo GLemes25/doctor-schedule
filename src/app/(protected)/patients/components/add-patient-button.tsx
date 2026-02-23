@@ -4,9 +4,9 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { SessionType } from "@/lib/auth";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { UpsertDoctorForm } from "./upsert-doctor-form";
+import { UpsertPatientForm } from "./upsert-patient-form";
 
-export const AddDoctorButton = ({ session }: { session: SessionType }) => {
+export const AddPatientButton = ({ session }: { session: SessionType }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -14,10 +14,10 @@ export const AddDoctorButton = ({ session }: { session: SessionType }) => {
       <DialogTrigger asChild>
         <Button>
           <Plus />
-          Adicionar Médico
+          Adicionar Paciente
         </Button>
       </DialogTrigger>
-      <UpsertDoctorForm isOpen={isOpen} session={session} onSuccess={() => setIsOpen(false)} />
+      <UpsertPatientForm isOpen={isOpen} session={session} onSuccess={() => setIsOpen(false)} />
     </Dialog>
   );
 };
