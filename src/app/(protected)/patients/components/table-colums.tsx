@@ -1,19 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { patientsTable } from "@/db/schema";
 import { getGenderLabel } from "@/helpers/gender";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { EditIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { TableAction } from "./table-action";
 
 type patientsType = typeof patientsTable.$inferSelect;
 
@@ -65,27 +56,7 @@ export const patientesTableColumns: ColumnDef<patientsType>[] = [
 
     cell(props) {
       const patient = props.row.original;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreVerticalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>{patient.name}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <EditIcon />
-              Editar
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <TrashIcon />
-              Excluir
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <TableAction patient={patient} />;
     },
   },
 ];
