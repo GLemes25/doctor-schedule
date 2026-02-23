@@ -1,3 +1,4 @@
+import { DataTable } from "@/components/ui/data-tabel";
 import {
   PageActions,
   PageContainer,
@@ -12,7 +13,7 @@ import { patientsTable } from "@/db/schema";
 import { requiereAuthAndClinic } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { AddPatientButton } from "./components/add-patient-button";
-import { PatientCard } from "./components/patient-card";
+import { patientesTableColumns } from "./components/table-colums";
 
 const PatientsPage = async () => {
   const session = await requiereAuthAndClinic();
@@ -35,16 +36,10 @@ const PatientsPage = async () => {
       </PageHeader>
       <PageContent>
         {patients.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {patients.map((patient) => (
-              <PatientCard key={patient.id} patient={patient} />
-            ))}
-          </div>
+          <DataTable data={patients} columns={patientesTableColumns} />
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-muted-foreground/25 bg-muted/30 px-8 py-16 text-center">
-            <p className="text-muted-foreground">
-              Nenhum paciente cadastrado
-            </p>
+          <div className="border-muted-foreground/25 bg-muted/30 flex flex-col items-center justify-center rounded-lg border border-dashed px-8 py-16 text-center">
+            <p className="text-muted-foreground">Nenhum paciente cadastrado</p>
             <p className="text-muted-foreground/80 mt-1 text-sm">
               Clique em &quot;Adicionar Paciente&quot; para começar
             </p>

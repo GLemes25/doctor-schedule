@@ -1,6 +1,6 @@
 enum genderEnum {
-  male = "masculino",
-  female = "feminino",
+  male = "Masculino",
+  female = "Feminino",
 }
 export const genders = Object.entries(genderEnum).map(([key, value]) => ({
   key,
