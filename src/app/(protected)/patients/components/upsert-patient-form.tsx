@@ -1,6 +1,7 @@
 "use client";
 import { UpsertPatient } from "@/actions/upsert-patient";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   DialogContent,
   DialogDescription,
@@ -31,7 +32,7 @@ import z from "zod";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
-  email: z.string().email({ message: "Email inválido" }),
+  email: z.email({ message: "Email inválido" }),
   phoneNumber: z.string().trim().min(1, { message: "Telefone é obrigatório" }),
   gender: z.enum(["male", "female"]),
   birthDate: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
@@ -188,7 +189,13 @@ export const UpsertPatientForm = ({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>Data de Nascimento</FieldLabel>
-                  <Input {...field} id={field.name} type="date" aria-invalid={fieldState.invalid} />
+                  <DatePicker
+                    id={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="dd/mm/aaaa"
+                    aria-invalid={fieldState.invalid}
+                  />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
