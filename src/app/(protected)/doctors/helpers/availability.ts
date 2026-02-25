@@ -55,3 +55,14 @@ export const getAvailability = (doctor: typeof doctorsTable.$inferSelect) => {
     .local();
   return { from, to };
 };
+
+export const getTimeUTC = (time: string) => {
+  const newTime = dayjs()
+    .utc()
+    .set("hour", parseInt(time.split(":")[0]))
+    .set("minute", parseInt(time.split(":")[1]))
+    .set("second", parseInt(time.split(":")[2]))
+    .local();
+
+  return newTime.format("HH:mm:ss");
+};

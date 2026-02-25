@@ -1,21 +1,17 @@
 "use client";
 
-import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ptBR } from "react-day-picker/locale";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
+import * as React from "react";
+import { ptBR } from "react-day-picker/locale";
 import { PatternFormat } from "react-number-format";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import "dayjs/locale/pt-br";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("pt-br");
@@ -43,6 +39,7 @@ type DatePickerProps = {
   "aria-invalid"?: boolean;
   className?: string;
   disabled?: boolean;
+  disablePastDates?: boolean;
 };
 
 export function DatePicker({
@@ -53,11 +50,13 @@ export function DatePicker({
   "aria-invalid": ariaInvalid,
   className,
   disabled,
+  disablePastDates = false,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
   const date = value ? dayjs(value).toDate() : undefined;
   const rawValue = formatToRaw(value ?? "");
   const [inputValue, setInputValue] = React.useState(rawValue);
+  const today = dayjs().startOf("day").toDate();
 
   React.useEffect(() => {
     setInputValue(formatToRaw(value ?? ""));
@@ -66,7 +65,13 @@ export function DatePicker({
   const handleInputChange = (values: { value: string }) => {
     const raw = values.value ?? "";
     setInputValue(raw);
+
     const iso = formatToYYYYMMDD(raw);
+    if (!iso) {
+      onChange(""); // importante!
+      return;
+    }
+
     onChange(iso);
   };
 
@@ -80,9 +85,9 @@ export function DatePicker({
   return (
     <div
       className={cn(
-        "border-input flex h-9 w-full items-center gap-1 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
+        "border-input focus-within:border-ring focus-within:ring-ring/50 flex h-9 w-full items-center gap-1 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]",
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
-        ariaInvalid && "border-destructive ring-destructive/20"
+        ariaInvalid && "border-destructive ring-destructive/20",
       )}
       aria-invalid={ariaInvalid}
     >
@@ -118,9 +123,8 @@ export function DatePicker({
             defaultMonth={date}
             captionLayout="dropdown"
             locale={ptBR}
-            fromYear={1900}
-            toYear={new Date().getFullYear()}
             onSelect={handleCalendarSelect}
+            disabled={disablePastDates ? { before: today } : undefined}
           />
         </PopoverContent>
       </Popover>
