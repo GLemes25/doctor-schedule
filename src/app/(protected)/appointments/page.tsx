@@ -26,7 +26,7 @@ const AppointmentsPage = async () => {
         columns: { name: true },
       },
       doctor: {
-        columns: { name: true },
+        columns: { name: true, specialty: true },
       },
     },
     orderBy: (table, { asc }) => asc(table.appointmentDateTime),
@@ -45,7 +45,7 @@ const AppointmentsPage = async () => {
   const appointmentsWithRelations = appointments.map((apt) => ({
     ...apt,
     patient: { name: apt.patient.name },
-    doctor: { name: apt.doctor.name },
+    doctor: { name: apt.doctor.name, specialty: apt.doctor.specialty },
   }));
 
   return (

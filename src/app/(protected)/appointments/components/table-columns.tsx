@@ -3,10 +3,11 @@
 import { appointmentsTable } from "@/db/schema";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { TableAction } from "./table-action";
 
 type AppointmentWithRelations = typeof appointmentsTable.$inferSelect & {
   patient: { name: string };
-  doctor: { name: string };
+  doctor: { name: string; specialty: string };
 };
 
 export const appointmentsTableColumns: ColumnDef<AppointmentWithRelations>[] = [
@@ -38,7 +39,16 @@ export const appointmentsTableColumns: ColumnDef<AppointmentWithRelations>[] = [
     },
   },
   {
-    id: "appointmentPriceInCents",
+    id: "specialty",
+    accessorKey: "doctor.specialty",
+    header: "Especialidade",
+    cell(props) {
+      const appointment = props.row.original;
+      return appointment.doctor?.specialty ?? "-";
+    },
+  },
+  {
+    id: "price",
     accessorKey: "appointmentPriceInCents",
     header: "Valor",
     cell(props) {
@@ -48,6 +58,16 @@ export const appointmentsTableColumns: ColumnDef<AppointmentWithRelations>[] = [
         style: "currency",
         currency: "BRL",
       });
+    },
+  },
+  {
+    id: "actions",
+    accessorKey: "actions",
+    header: "",
+
+    cell(props) {
+      const appointment = props.row.original;
+      return <TableAction appointment={appointment} />;
     },
   },
 ];
