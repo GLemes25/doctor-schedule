@@ -38,7 +38,7 @@ export const businessHours = Array.from({ length: 35 }, (_, i) => {
   return `${h}:${m}`;
 });
 
-export const getAvailability = (doctor: typeof doctorsTable.$inferSelect) => {
+export const getAvailabilityDoctor = (doctor: typeof doctorsTable.$inferSelect) => {
   const from = dayjs()
     .utc()
     .day(doctor.availabilityFromWeekDay)

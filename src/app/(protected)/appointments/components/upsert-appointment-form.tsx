@@ -16,11 +16,12 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TimeInput } from "@/components/ui/time-input";
 import { doctorsTable, patientsTable } from "@/db/schema";
+import { TimeGroups } from "@/helpers/time";
 import { SessionType } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
@@ -31,7 +32,7 @@ import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
-import { getAvailability, getTimeUTC } from "../../doctors/helpers/availability";
+import { getAvailabilityDoctor, getTimeUTC } from "../../doctors/helpers/availability";
 
 type FormValues = z.infer<ReturnType<typeof formSchema>>;
 
@@ -71,7 +72,7 @@ const formSchema = (doctors: Doctor[]) =>
       const [h, m] = appointmentTime.split(":").map(Number);
       const minutes = h * 60 + m;
 
-      const availability = getAvailability(doctor);
+      const availability = getAvailabilityDoctor(doctor);
 
       const min = Number(getTimeUTC(doctor.availabilityFromTime).slice(0, 5).replace(":", ""));
       const max = Number(getTimeUTC(doctor.availabilityToTime).slice(0, 5).replace(":", ""));
@@ -159,14 +160,6 @@ export const UpsertAppointmentForm = ({
       clinicId: session.user.clinic.id,
     });
   };
-
-  const minTime = selectedDoctorData?.availabilityFromTime
-    ? getTimeUTC(selectedDoctorData.availabilityFromTime).slice(0, 5)
-    : undefined;
-
-  const maxTime = selectedDoctorData?.availabilityToTime
-    ? getTimeUTC(selectedDoctorData.availabilityToTime).slice(0, 5)
-    : undefined;
 
   return (
     <DialogContent className="flex max-h-[90vh] flex-col">
@@ -285,13 +278,27 @@ export const UpsertAppointmentForm = ({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Horário</FieldLabel>
-                  <TimeInput
-                    value={field.value}
-                    onChange={field.onChange}
-                    minTime={minTime}
-                    maxTime={maxTime}
-                    disabled={!hasPatientAndDoctor}
-                  />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={!watchedDoctorId}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione um horário" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TimeGroups.map((group) => (
+                        <SelectGroup key={group.label}>
+                          <SelectLabel>{group.label}</SelectLabel>
+                          {group.times.map((time) => (
+                            <SelectItem key={time} value={`${time}:00`}>
+                              {time}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
