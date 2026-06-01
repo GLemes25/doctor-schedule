@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node scripts/patch-kysely-adapter.cjs"
   },
   "dependencies": {
+    "@better-auth/kysely-adapter": "^1.6.13",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-table": "^8.21.3",
-    "better-auth": "^1.4.18",
+    "better-auth": "^1.6.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -20,6 +22,7 @@
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "kysely": "^0.29.2",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "next-safe-action": "^8.0.12",
@@ -43,7 +46,7 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "^0.31.9",
-    "eslint": "^10",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.1",
