@@ -71,6 +71,15 @@ src/
 
 ---
 
+## Dependências
+
+- **Gerenciador de pacotes:** npm (obrigatório — não use pnpm ou yarn).
+- Sempre instale com `npm install <pacote>` ou `npm install -D <pacote>` para devDependencies.
+- Não instale pacotes duplicados que já existam via shadcn ou Radix UI.
+- Verifique compatibilidade com React 19 antes de adicionar uma dependência nova.
+
+---
+
 ## Commits (para desenvolvedores humanos)
 
 - Mensagens de commit devem seguir o padrão **Conventional Commits** em **inglês**:
