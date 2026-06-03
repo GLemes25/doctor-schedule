@@ -77,6 +77,16 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
+    password: {
+      hash: async (password) => {
+        const bcrypt = await import("bcryptjs");
+        return bcrypt.hash(password, 10);
+      },
+      verify: async ({ hash, password }) => {
+        const bcrypt = await import("bcryptjs");
+        return bcrypt.compare(password, hash);
+      },
+    },
   },
 });
 

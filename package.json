@@ -7,12 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "node scripts/patch-kysely-adapter.cjs"
+    "postinstall": "node scripts/patch-kysely-adapter.cjs",
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "@better-auth/kysely-adapter": "^1.6.13",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-table": "^8.21.3",
+    "bcryptjs": "^3.0.3",
     "better-auth": "^1.6.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -40,6 +42,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^25",
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
