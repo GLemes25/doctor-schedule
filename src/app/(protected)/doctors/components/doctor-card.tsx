@@ -31,7 +31,7 @@ import {
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getAvailability } from "../helpers/availability";
+import { getAvailabilityDoctor } from "../helpers/availability";
 import { UpsertDoctorForm } from "./upsert-doctor-form";
 
 type DoctorCardProps = {
@@ -62,7 +62,7 @@ export const DoctorCard = ({ doctor }: DoctorCardProps) => {
     });
   };
 
-  const availability = getAvailability(doctor);
+  const availability = getAvailabilityDoctor(doctor);
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
       <CardHeader className="pt-6">

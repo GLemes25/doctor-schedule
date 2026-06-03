@@ -14,11 +14,12 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TimeInput } from "@/components/ui/time-input";
 import { doctorsTable } from "@/db/schema";
+import { TimeGroups } from "@/helpers/time";
 import { SessionType } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -30,7 +31,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { genders } from "../../../../helpers/gender";
 import { medicalSpecialties } from "../constants";
-import { setWeekDayKey, weekDays } from "../helpers/availability";
+import { getTimeUTC, setWeekDayKey, weekDays } from "../helpers/availability";
 
 const formschema = z
   .object({
@@ -94,8 +95,10 @@ export const UpsertDoctorForm = ({ isOpen, session, doctor, onSuccess }: UpsertD
         availabilityToWeekDay: doctor?.availabilityToWeekDay
           ? weekDays[doctor?.availabilityToWeekDay].value
           : weekDays[5].value,
-        availabilityFromTime: doctor?.availabilityFromTime ?? "",
-        availabilityToTime: doctor?.availabilityToTime ?? "",
+        availabilityFromTime: doctor?.availabilityFromTime
+          ? getTimeUTC(doctor.availabilityFromTime)
+          : "",
+        availabilityToTime: doctor?.availabilityToTime ? getTimeUTC(doctor.availabilityToTime) : "",
         gender: doctor?.gender ?? "male",
       });
     }
@@ -286,7 +289,24 @@ export const UpsertDoctorForm = ({ isOpen, session, doctor, onSuccess }: UpsertD
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Hora inicial de disponibilidade</FieldLabel>
-                  <TimeInput value={field.value} onChange={field.onChange} />
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione um horário" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TimeGroups.map((group) => (
+                        <SelectGroup key={group.label}>
+                          <SelectLabel>{group.label}</SelectLabel>
+
+                          {group.times.map((time) => (
+                            <SelectItem key={time} value={`${time}:00`}>
+                              {time}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -297,7 +317,24 @@ export const UpsertDoctorForm = ({ isOpen, session, doctor, onSuccess }: UpsertD
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Hora final de disponibilidade</FieldLabel>
-                  <TimeInput value={field.value} onChange={field.onChange} />
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione um horário" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TimeGroups.map((group) => (
+                        <SelectGroup key={group.label}>
+                          <SelectLabel>{group.label}</SelectLabel>
+
+                          {group.times.map((time) => (
+                            <SelectItem key={time} value={`${time}:00`}>
+                              {time}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
